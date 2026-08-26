@@ -1,21 +1,38 @@
 "use client";
-import { useEffect, useState } from "react";
-import { supabase } from "@/src/lib/supabase/client";
-import { Button, Center, Container } from "@mantine/core";
+import { useState } from "react";
+import { Box, Center } from "@mantine/core";
 
 import ViewSwitcher from "../components/ViewSwitcher";
+import FamilyTree from "../components/family-tree/FamilyTree";
+import FamilyCard from "../components/family-card/FamilyCard";
 
 export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
   return (
-    <>
-      <Container size="xl" py="md">
-        <Center mb="md">
-          <ViewSwitcher value={view} onChange={setView} />
-        </Center>
+    <Box
+      w="90%"
+      mx="auto"
+      pt="md"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        flex: 1,
+        minHeight: 0,
+      }}
+    >
+      <Center mb="md">
+        <ViewSwitcher value={view} onChange={setView} />
+      </Center>
 
-        {view === "tree" ? <div>Tree view</div> : <div>Card view</div>}
-      </Container>
-    </>
+      <Box
+        w="100%"
+        style={{
+          flex: 1,
+          minHeight: 0,
+        }}
+      >
+        {view === "tree" ? <FamilyTree /> : <FamilyCard />}
+      </Box>
+    </Box>
   );
 }
