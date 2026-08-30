@@ -15,8 +15,12 @@ export interface Person {
 export interface PersonForm {
   full_name: string;
   gender: Gender;
-  birth_date: string | null;
+  birth_date: string;
+  avatar_url: string;
+
   death_date: string | null;
   biography: string | null;
-  avatar: File | null;
+  father_id: string | null;
+  mother_id: string | null;
+  spouse_ids: string[] | null;
 }
