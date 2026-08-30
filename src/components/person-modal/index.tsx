@@ -50,10 +50,7 @@ export default function PersonModal({ opened, onClose }: PersonModalProps) {
             mother_id: null,
             spouse_ids: null,
           };
-          const person = await createPerson(personModel);
-          if (!person) {
-            throw new Error("Tạo thành viên thất bại");
-          }
+          await createPerson(personModel);
           form.reset();
           setAvatar(null);
           onClose();

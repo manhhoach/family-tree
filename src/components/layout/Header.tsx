@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { Button, Group, Text, Box } from "@mantine/core";
@@ -21,17 +22,15 @@ export default function Header() {
         {/* Brand */}
         <Group gap="md">
           <Box
-            w={60}
-            h={60}
+            w={90}
+            h={90}
             style={{
               display: "grid",
               placeItems: "center",
               borderRadius: 14,
-              background: "rgba(255,255,255,0.1)",
-              fontSize: 40,
             }}
           >
-            🌿
+            <img alt="icon" src={"/family-tree.png"} />
           </Box>
 
           <Text
