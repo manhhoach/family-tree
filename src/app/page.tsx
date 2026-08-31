@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Box, Button, Group } from "@mantine/core";
 import ViewSwitcher from "../components/ViewSwitcher";
 import FamilyTree from "../components/family-tree/FamilyTree";
-import FamilyCard from "../components/family-card/FamilyCard";
-import { IconPlus, IconEdit, IconTrash } from "@tabler/icons-react";
+import FamilyMembers from "../components/family-members";
+import { IconPlus } from "@tabler/icons-react";
 import PersonModal from "../components/person-modal";
 import { useDisclosure } from "@mantine/hooks";
 
@@ -12,6 +12,12 @@ export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
   const [opened, { open, close }] = useDisclosure(false);
   const [currentPersonId, setCurrentPersonId] = useState<string | null>(null);
+
+  const handleUpsertPerson = (id: string | null) => {
+    setCurrentPersonId(id);
+    open();
+  };
+
   return (
     <Box
       w="90%"
@@ -32,8 +38,7 @@ export default function Home() {
           p={0}
           radius="50%"
           onClick={() => {
-            setCurrentPersonId(null);
-            open();
+            handleUpsertPerson(null);
           }}
         >
           <IconPlus />
@@ -47,7 +52,8 @@ export default function Home() {
           minHeight: 0,
         }}
       >
-        {view === "tree" ? <FamilyTree /> : <FamilyCard />}
+        {/* {view === "tree" ? <FamilyTree /> : <FamilyCard />} */}
+        <FamilyMembers handleUpsertPerson={handleUpsertPerson} />
       </Box>
 
       <PersonModal opened={opened} onClose={close} />

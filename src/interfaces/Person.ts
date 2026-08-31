@@ -24,3 +24,7 @@ export interface PersonForm {
   mother_id: string | null;
   spouse_ids: string[] | null;
 }
+
+export interface PersonSearchCondition{
+  full_name?: string;
+}
