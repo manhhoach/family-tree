@@ -7,7 +7,7 @@ import PersonCard from "./person-card";
 import { SimpleGrid } from "@mantine/core";
 
 interface FamilyMembersProps {
-  handleUpsertPerson: (id: string | null) => void;
+  handleUpsertPerson: (id?: string) => void;
 }
 
 export default function FamilyMembers({

@@ -11,9 +11,9 @@ import { useDisclosure } from "@mantine/hooks";
 export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
   const [opened, { open, close }] = useDisclosure(false);
-  const [currentPersonId, setCurrentPersonId] = useState<string | null>(null);
+  const [currentPersonId, setCurrentPersonId] = useState<string | undefined>();
 
-  const handleUpsertPerson = (id: string | null) => {
+  const handleUpsertPerson = (id?: string) => {
     setCurrentPersonId(id);
     open();
   };
@@ -38,7 +38,7 @@ export default function Home() {
           p={0}
           radius="50%"
           onClick={() => {
-            handleUpsertPerson(null);
+            handleUpsertPerson();
           }}
         >
           <IconPlus />
@@ -56,7 +56,7 @@ export default function Home() {
         <FamilyMembers handleUpsertPerson={handleUpsertPerson} />
       </Box>
 
-      <PersonModal opened={opened} onClose={close} />
+      <PersonModal opened={opened} onClose={close} personId={currentPersonId} />
     </Box>
   );
 }

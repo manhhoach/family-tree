@@ -14,20 +14,25 @@ import {
 } from "@mantine/core";
 import { Gender } from "@/src/consts/Gender";
 import { useForm } from "@mantine/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PersonForm } from "@/src/interfaces/Person";
 import { uploadAvatar } from "@/src/api/storage";
-import { createPerson } from "@/src/api/person";
+import { createPerson, getPersonById } from "@/src/api/person";
 
 interface PersonModalProps {
   opened: boolean;
   onClose: () => void;
+  personId?: string;
 }
 
-export default function PersonModal({ opened, onClose }: PersonModalProps) {
+export default function PersonModal({
+  opened,
+  onClose,
+  personId,
+}: PersonModalProps) {
   const [avatar, setAvatar] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const form = useForm<PersonForm>({});
+  const form = useForm<PersonForm>();
 
   const handleSubmit = async (values: PersonForm) => {
     setLoading(true);
@@ -46,9 +51,6 @@ export default function PersonModal({ opened, onClose }: PersonModalProps) {
             death_date: values.death_date,
             full_name: values.full_name,
             gender: values.gender,
-            father_id: null,
-            mother_id: null,
-            spouse_ids: null,
           };
           await createPerson(personModel);
           form.reset();
@@ -64,6 +66,31 @@ export default function PersonModal({ opened, onClose }: PersonModalProps) {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (!opened) return;
+
+    if (!personId) {
+      console.log('aaa')
+      form.reset();
+      return;
+    }
+
+    const loadPerson = async () => {
+      const person = await getPersonById(personId);
+
+      if (person) {
+        const originalData: PersonForm = {
+          ...person,
+        };
+        form.setValues(originalData);
+      }
+    };
+
+    loadPerson();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [opened, personId]);
+
   return (
     <Modal opened={opened} onClose={onClose} title="Thêm thành viên" size="xl">
       <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -104,6 +131,7 @@ export default function PersonModal({ opened, onClose }: PersonModalProps) {
                 placeholder="Nhập tiểu sử..."
                 rows={5}
                 {...form.getInputProps("biography")}
+                defaultValue={""}
               />
 
               <FileInput
@@ -116,7 +144,6 @@ export default function PersonModal({ opened, onClose }: PersonModalProps) {
             </Stack>
           </Paper>
 
-          {/* Quan hệ gia đình */}
           <Paper withBorder p="md" radius="md">
             <Title order={4} mb="md">
               Quan hệ gia đình

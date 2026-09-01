@@ -21,7 +21,7 @@ import {
 
 interface PersonCardProps {
   data: Person;
-  handleUpsertPerson: (id: string | null) => void;
+  handleUpsertPerson: (id?: string) => void;
 }
 
 export default function PersonCard({
