@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @next/next/no-img-element */
 "use client";
 import "@mantine/dates/styles.css";
@@ -17,9 +18,14 @@ import { DateInput } from "@mantine/dates";
 import { Gender } from "@/src/consts/Gender";
 import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
-import { PersonForm } from "@/src/interfaces/Person";
+import { Person, PersonForm } from "@/src/interfaces/Person";
 import { uploadAvatar } from "@/src/api/storage";
-import { createPerson, getPersonById, updatePerson } from "@/src/api/person";
+import {
+  createPerson,
+  getPersonById,
+  getPersonSelection,
+  updatePerson,
+} from "@/src/api/person";
 
 interface PersonModalProps {
   opened: boolean;
@@ -35,11 +41,12 @@ export default function PersonModal({
   const [avatar, setAvatar] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const form = useForm<PersonForm>();
+  const [personOptions, setPersonOptions] = useState<Person[]>([]);
 
   const handleSubmit = async (values: PersonForm) => {
     setLoading(true);
     try {
-      const avatarUrl = avatar ? await uploadAvatar(avatar) : undefined;
+      const avatarUrl = avatar ? await uploadAvatar(avatar) : values.avatar_url;
 
       const personModel: PersonForm = {
         avatar_url: avatarUrl,
@@ -66,11 +73,11 @@ export default function PersonModal({
     }
   };
 
+  // useEffect for load form
   useEffect(() => {
     if (!opened) return;
 
     if (!personId) {
-      console.log("aaa");
       form.reset();
       return;
     }
@@ -87,8 +94,16 @@ export default function PersonModal({
     };
 
     loadPerson();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [opened, personId]);
+  }, []);
+
+  // useEffect for init data
+  useEffect(() => {
+    const fetchPersonOptions = async () => {
+      const res = await getPersonSelection(personId);
+      setPersonOptions(res as Person[]);
+    };
+    fetchPersonOptions();
+  }, []);
 
   return (
     <Modal opened={opened} onClose={onClose} title="Thêm thành viên" size="xl">
@@ -145,8 +160,8 @@ export default function PersonModal({
                   }
                   alt="avatar"
                   style={{
-                    width: 100,
-                    height: 100,
+                    width: 120,
+                    height: 120,
                     objectFit: "cover",
                     borderRadius: 8,
                   }}
@@ -163,19 +178,35 @@ export default function PersonModal({
           <Paper withBorder p="xs" radius="md">
             <Title order={4}>Quan hệ gia đình</Title>
 
-            <Stack gap="md">
-              <Select label="Cha" data={[]} searchable clearable />
-
-              <Select label="Mẹ" data={[]} searchable clearable />
-
+            <Group gap="md" grow>
               <Select
-                label="Vợ / Chồng"
-                data={[]}
+                label="Cha"
+                data={personOptions
+                  .filter((x) => x.gender === Gender.MALE)
+                  .map((e) => ({ value: e.id, label: e.full_name }))}
                 searchable
                 clearable
-                multiple
               />
-            </Stack>
+
+              <Select
+                label="Mẹ"
+                data={personOptions
+                  .filter((x) => x.gender === Gender.FEMALE)
+                  .map((e) => ({ value: e.id, label: e.full_name }))}
+                searchable
+                clearable
+              />
+            </Group>
+            <Select
+              label="Vợ / Chồng"
+              data={personOptions.map((e) => ({
+                value: e.id,
+                label: e.full_name,
+              }))}
+              searchable
+              clearable
+              multiple
+            />
           </Paper>
         </Stack>
 

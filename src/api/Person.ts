@@ -4,36 +4,23 @@ import {
   PersonSearchCondition,
 } from "../interfaces/Person";
 import { supabase } from "@/src/lib/supabase/client";
+import { execute } from "../lib/supabase/query";
 
-export async function getAllPersons(
-  condition?: PersonSearchCondition,
-): Promise<Person[] | null> {
-  let query = supabase.from("persons").select("*");
+export async function getAllPersons(condition?: PersonSearchCondition) {
+  let query = supabase.from("persons").select("*").order("full_name");
   if (condition && condition.full_name) {
     query = query.ilike("full_name", `%${condition.full_name ?? ""}%`);
   }
-  const { data, error } = await query;
-  if (error) {
-    throw error;
-  }
-  return data;
+  return execute(query);
 }
 
 export async function getPersonById(id: string): Promise<Person | null> {
-  const { data, error } = await supabase
-    .from("persons")
-    .select("*")
-    .eq("id", id)
-    .single();
-  if (error) {
-    throw error;
-  }
-
-  return data;
+  const query = supabase.from("persons").select("*").eq("id", id).single();
+  return execute(query);
 }
 
 export async function createPerson(person: PersonForm) {
-  const { error } = await supabase.from("persons").insert({
+  const query = supabase.from("persons").insert({
     full_name: person.full_name,
     gender: person.gender,
     birth_date: person.birth_date,
@@ -41,9 +28,7 @@ export async function createPerson(person: PersonForm) {
     biography: person.biography,
     avatar_url: person.avatar_url,
   });
-  if (error) {
-    throw error;
-  }
+  await execute(query);
 }
 
 export async function updatePerson(person: PersonForm) {
@@ -51,7 +36,7 @@ export async function updatePerson(person: PersonForm) {
     throw new Error("Person ID is required");
   }
 
-  const { error } = await supabase
+  const query = supabase
     .from("persons")
     .update({
       full_name: person.full_name,
@@ -64,14 +49,24 @@ export async function updatePerson(person: PersonForm) {
     })
     .eq("id", person.id);
 
-  if (error) {
-    throw error;
-  }
+  await execute(query);
 }
 
 export async function deletePerson(id: string) {
-  const { error } = await supabase.from("persons").delete().eq("id", id);
-  if (error) {
-    throw error;
+  const query = supabase.from("persons").delete().eq("id", id);
+  await execute(query);
+}
+
+export async function getPersonSelection(id?: string) {
+  let query = supabase.from("persons").select(
+    `
+    id,
+    full_name,
+    gender
+    `,
+  );
+  if (id) {
+    query = query.neq("id", id);
   }
+  return execute(query);
 }

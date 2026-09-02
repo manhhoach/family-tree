@@ -1,14 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Box, Button, Group } from "@mantine/core";
+import { Box, Button, Group, SimpleGrid } from "@mantine/core";
 import ViewSwitcher from "../components/ViewSwitcher";
 import FamilyTree from "../components/family-tree/FamilyTree";
-import FamilyMembers from "../components/family-members";
 import { IconPlus } from "@tabler/icons-react";
-import PersonModal from "../components/person-modal";
+import PersonModal from "../components/PersonModal";
 import { useDisclosure } from "@mantine/hooks";
 import { Person } from "../interfaces/Person";
 import { deletePerson, getAllPersons } from "../api/person";
+import PersonCard from "../components/PersonCard";
 
 export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
@@ -18,6 +18,7 @@ export default function Home() {
 
   const fetchData = async () => {
     const res = await getAllPersons();
+    console.log(res)
     if (res) {
       setData(res);
     }
@@ -79,18 +80,24 @@ export default function Home() {
         }}
       >
         {/* {view === "tree" ? <FamilyTree /> : <FamilyCard />} */}
-        <FamilyMembers
-          data={data}
-          handleDelete={handleDelete}
-          handleUpsertPerson={handleUpsertPerson}
-        />
+        <SimpleGrid cols={{ sm: 3, lg: 6, base: 2 }} spacing="md">
+          {data &&
+            data.map((person) => (
+              <PersonCard
+                handleUpsertPerson={handleUpsertPerson}
+                data={person}
+                key={person.id}
+                handleDelete={handleDelete}
+              />
+            ))}
+        </SimpleGrid>
       </Box>
       {opened && (
         <PersonModal
           opened={opened}
-          onClose={() => {
+          onClose={async () => {
             close();
-            fetchData();
+            await fetchData();
           }}
           personId={currentPersonId}
         />
