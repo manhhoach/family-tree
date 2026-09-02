@@ -18,10 +18,7 @@ export default function Home() {
 
   const fetchData = async () => {
     const res = await getAllPersons();
-    console.log(res)
-    if (res) {
-      setData(res);
-    }
+    setData(res);
   };
 
   const handleDelete = async (id: string) => {
@@ -97,7 +94,7 @@ export default function Home() {
           opened={opened}
           onClose={async () => {
             close();
-            await fetchData();
+            fetchData();
           }}
           personId={currentPersonId}
         />
