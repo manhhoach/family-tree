@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllPersons } from "@/src/api/person";
+import { deletePerson, getAllPersons } from "@/src/api/person";
 import { Person } from "@/src/interfaces/Person";
 import { useEffect, useState } from "react";
 import PersonCard from "./person-card";
@@ -22,10 +22,22 @@ export default function FamilyMembers({
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!confirm("Bạn có chắc muốn xoá thành viên này không?")) return;
+
+    try {
+      await deletePerson(id);
+      await fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchData();
   }, []);
+
   return (
     <SimpleGrid cols={{ sm: 3, lg: 6, base: 2 }} spacing="md">
       {data &&
@@ -34,6 +46,7 @@ export default function FamilyMembers({
             handleUpsertPerson={handleUpsertPerson}
             data={person}
             key={person.id}
+            handleDelete={handleDelete}
           />
         ))}
     </SimpleGrid>

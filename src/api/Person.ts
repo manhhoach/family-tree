@@ -49,3 +49,10 @@ export async function createPerson(person: PersonForm) {
   }
   return true;
 }
+
+export async function deletePerson(id: string) {
+  const { error } = await supabase.from("persons").delete().eq("id", id);
+  if (error) {
+    console.log(error);
+  }
+}

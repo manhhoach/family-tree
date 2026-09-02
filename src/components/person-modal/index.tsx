@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import {
@@ -7,10 +8,10 @@ import {
   TextInput,
   Textarea,
   FileInput,
-  SimpleGrid,
   Paper,
   Title,
   Stack,
+  Group,
 } from "@mantine/core";
 import { Gender } from "@/src/consts/Gender";
 import { useForm } from "@mantine/form";
@@ -71,7 +72,7 @@ export default function PersonModal({
     if (!opened) return;
 
     if (!personId) {
-      console.log('aaa')
+      console.log("aaa");
       form.reset();
       return;
     }
@@ -88,29 +89,25 @@ export default function PersonModal({
     };
 
     loadPerson();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened, personId]);
 
   return (
     <Modal opened={opened} onClose={onClose} title="Thêm thành viên" size="xl">
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
-          <Paper withBorder p="md" radius="md">
-            <Title order={4} mb="md">
-              Thông tin cá nhân
-            </Title>
+        <Stack>
+          <Paper withBorder p="xs" radius="md">
+            <Title order={4}>Thông tin cá nhân</Title>
 
-            <Stack gap="md">
+            <Group justify="space-between">
               <TextInput
                 label="Họ và tên"
-                placeholder="Nguyễn Văn A"
                 required
                 {...form.getInputProps("full_name")}
               />
 
               <Select
                 label="Giới tính"
-                placeholder="Chọn giới tính"
                 data={[
                   { value: Gender.MALE, label: "Nam" },
                   { value: Gender.FEMALE, label: "Nữ" },
@@ -118,22 +115,14 @@ export default function PersonModal({
                 required
                 {...form.getInputProps("gender")}
               />
-
               <TextInput
                 label="Ngày sinh"
                 type="date"
                 required
                 {...form.getInputProps("birth_date")}
               />
-
-              <Textarea
-                label="Tiểu sử"
-                placeholder="Nhập tiểu sử..."
-                rows={5}
-                {...form.getInputProps("biography")}
-                defaultValue={""}
-              />
-
+            </Group>
+            <Stack>
               <FileInput
                 label="Ảnh đại diện"
                 placeholder="Chọn ảnh"
@@ -141,34 +130,41 @@ export default function PersonModal({
                 value={avatar}
                 onChange={setAvatar}
               />
+              {(avatar || form.values.avatar_url) && (
+                <img
+                  src={
+                    avatar
+                      ? URL.createObjectURL(avatar)
+                      : form.values.avatar_url
+                  }
+                  alt="avatar"
+                  style={{
+                    width: 100,
+                    height: 100,
+                    objectFit: "cover",
+                    borderRadius: 8,
+                  }}
+                />
+              )}
             </Stack>
+            <Textarea
+              label="Tiểu sử"
+              rows={4}
+              {...form.getInputProps("biography")}
+              defaultValue={""}
+            />
           </Paper>
 
-          <Paper withBorder p="md" radius="md">
-            <Title order={4} mb="md">
-              Quan hệ gia đình
-            </Title>
+          <Paper withBorder p="xs" radius="md">
+            <Title order={4}>Quan hệ gia đình</Title>
 
             <Stack gap="md">
-              <Select
-                label="Cha"
-                placeholder="Chọn cha"
-                data={[]}
-                searchable
-                clearable
-              />
+              <Select label="Cha" data={[]} searchable clearable />
 
-              <Select
-                label="Mẹ"
-                placeholder="Chọn mẹ"
-                data={[]}
-                searchable
-                clearable
-              />
+              <Select label="Mẹ" data={[]} searchable clearable />
 
               <Select
                 label="Vợ / Chồng"
-                placeholder="Chọn vợ / chồng"
                 data={[]}
                 searchable
                 clearable
@@ -176,7 +172,7 @@ export default function PersonModal({
               />
             </Stack>
           </Paper>
-        </SimpleGrid>
+        </Stack>
 
         <Button fullWidth mt="md" type="submit" loading={loading}>
           Thêm thành viên

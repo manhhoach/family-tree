@@ -55,8 +55,13 @@ export default function Home() {
         {/* {view === "tree" ? <FamilyTree /> : <FamilyCard />} */}
         <FamilyMembers handleUpsertPerson={handleUpsertPerson} />
       </Box>
-
-      <PersonModal opened={opened} onClose={close} personId={currentPersonId} />
+      {opened && (
+        <PersonModal
+          opened={opened}
+          onClose={close}
+          personId={currentPersonId}
+        />
+      )}
     </Box>
   );
 }

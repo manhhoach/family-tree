@@ -22,11 +22,13 @@ import {
 interface PersonCardProps {
   data: Person;
   handleUpsertPerson: (id?: string) => void;
+  handleDelete: (id: string) => Promise<void>;
 }
 
 export default function PersonCard({
   data,
   handleUpsertPerson,
+  handleDelete,
 }: PersonCardProps) {
   return (
     <Card withBorder radius="md" shadow="md" w={250} pos="relative">
@@ -45,7 +47,7 @@ export default function PersonCard({
           <ActionIcon
             variant="subtle"
             color="red"
-            onClick={() => console.log("delete", data.id)}
+            onClick={() => handleDelete(data.id)}
           >
             <IconTrash size={16} />
           </ActionIcon>
