@@ -1,6 +1,6 @@
 import { supabase } from "@/src/lib/supabase/client";
 
-export async function uploadAvatar(file: File): Promise<string | null> {
+export async function uploadAvatar(file: File) {
   const extension = file.name.split(".").pop();
   const fileName = `${crypto.randomUUID()}.${extension}`;
 
@@ -12,13 +12,9 @@ export async function uploadAvatar(file: File): Promise<string | null> {
     });
 
   if (error) {
-    console.error("Upload avatar error:", error);
-    return null;
+    throw error;
   }
-
-  const { data } = supabase.storage
-    .from("avatars")
-    .getPublicUrl(fileName);
+  const { data } = supabase.storage.from("avatars").getPublicUrl(fileName);
 
   return data.publicUrl;
 }

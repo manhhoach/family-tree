@@ -18,6 +18,7 @@ import {
   IconGenderMale,
   IconTrash,
 } from "@tabler/icons-react";
+import dayjs from "dayjs";
 
 interface PersonCardProps {
   data: Person;
@@ -73,14 +74,19 @@ export default function PersonCard({
           </Group>
         </Box>
 
-        <Group gap="xs">
+        <Group gap="sm">
           <ThemeIcon variant="transparent" size="sm">
             <IconCalendar size={16} />
           </ThemeIcon>
 
           <Text size="sm">
-            {data.birth_date || "?"}
-            {data.death_date && ` - ${data.death_date}`}
+            {data.birth_date
+              ? dayjs(data.birth_date).format("DD/MM/YYYY")
+              : "??"}
+            {" ⇒ "}
+            {data.death_date
+              ? dayjs(data.death_date).format("DD/MM/YYYY")
+              : "??"}
           </Text>
         </Group>
       </Stack>

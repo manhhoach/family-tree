@@ -14,8 +14,7 @@ export async function getAllPersons(
   }
   const { data, error } = await query;
   if (error) {
-    console.log(error);
-    return null;
+    throw error;
   }
   return data;
 }
@@ -27,8 +26,7 @@ export async function getPersonById(id: string): Promise<Person | null> {
     .eq("id", id)
     .single();
   if (error) {
-    console.error(error);
-    return null;
+    throw error;
   }
 
   return data;
@@ -44,15 +42,36 @@ export async function createPerson(person: PersonForm) {
     avatar_url: person.avatar_url,
   });
   if (error) {
-    console.error(error);
-    return false;
+    throw error;
   }
-  return true;
+}
+
+export async function updatePerson(person: PersonForm) {
+  if (!person.id) {
+    throw new Error("Person ID is required");
+  }
+
+  const { error } = await supabase
+    .from("persons")
+    .update({
+      full_name: person.full_name,
+      gender: person.gender,
+      birth_date: person.birth_date || null,
+      death_date: person.death_date || null,
+      biography: person.biography || null,
+      avatar_url: person.avatar_url || null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", person.id);
+
+  if (error) {
+    throw error;
+  }
 }
 
 export async function deletePerson(id: string) {
   const { error } = await supabase.from("persons").delete().eq("id", id);
   if (error) {
-    console.log(error);
+    throw error;
   }
 }

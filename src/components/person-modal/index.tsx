@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-
+import "@mantine/dates/styles.css";
 import {
   Button,
   Modal,
@@ -13,12 +13,13 @@ import {
   Stack,
   Group,
 } from "@mantine/core";
+import { DateInput } from "@mantine/dates";
 import { Gender } from "@/src/consts/Gender";
 import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
 import { PersonForm } from "@/src/interfaces/Person";
 import { uploadAvatar } from "@/src/api/storage";
-import { createPerson, getPersonById } from "@/src/api/person";
+import { createPerson, getPersonById, updatePerson } from "@/src/api/person";
 
 interface PersonModalProps {
   opened: boolean;
@@ -38,29 +39,26 @@ export default function PersonModal({
   const handleSubmit = async (values: PersonForm) => {
     setLoading(true);
     try {
-      let avatarUrl: string | null = null;
-      if (avatar) {
-        avatarUrl = await uploadAvatar(avatar);
-        if (!avatarUrl) {
-          throw new Error("Upload ảnh thất bại");
-        }
-        if (avatarUrl) {
-          const personModel: PersonForm = {
-            avatar_url: avatarUrl,
-            biography: values.biography,
-            birth_date: values.birth_date,
-            death_date: values.death_date,
-            full_name: values.full_name,
-            gender: values.gender,
-          };
-          await createPerson(personModel);
-          form.reset();
-          setAvatar(null);
-          onClose();
-        }
+      const avatarUrl = avatar ? await uploadAvatar(avatar) : undefined;
+
+      const personModel: PersonForm = {
+        avatar_url: avatarUrl,
+        biography: values.biography,
+        birth_date: values.birth_date ? values.birth_date : undefined,
+        death_date: values.death_date ? values.death_date : undefined,
+        full_name: values.full_name,
+        gender: values.gender,
+        id: values.id,
+      };
+      if (values.id) {
+        await updatePerson(personModel);
       } else {
-        throw new Error("Vui long chon avatar");
+        await createPerson(personModel);
       }
+
+      form.reset();
+      setAvatar(null);
+      onClose();
     } catch (e) {
       console.log(e);
     } finally {
@@ -99,7 +97,7 @@ export default function PersonModal({
           <Paper withBorder p="xs" radius="md">
             <Title order={4}>Thông tin cá nhân</Title>
 
-            <Group justify="space-between">
+            <Group justify="space-between" grow>
               <TextInput
                 label="Họ và tên"
                 required
@@ -115,11 +113,19 @@ export default function PersonModal({
                 required
                 {...form.getInputProps("gender")}
               />
-              <TextInput
+            </Group>
+            <Group justify="space-between" grow>
+              <DateInput
                 label="Ngày sinh"
-                type="date"
-                required
+                valueFormat="DD/MM/YYYY"
                 {...form.getInputProps("birth_date")}
+                clearable
+              />
+              <DateInput
+                label="Ngày mất"
+                valueFormat="DD/MM/YYYY"
+                {...form.getInputProps("death_date")}
+                clearable
               />
             </Group>
             <Stack>
@@ -151,7 +157,6 @@ export default function PersonModal({
               label="Tiểu sử"
               rows={4}
               {...form.getInputProps("biography")}
-              defaultValue={""}
             />
           </Paper>
 
@@ -175,7 +180,7 @@ export default function PersonModal({
         </Stack>
 
         <Button fullWidth mt="md" type="submit" loading={loading}>
-          Thêm thành viên
+          {personId ? "Cập nhật" : "Thêm mới"}
         </Button>
       </form>
     </Modal>

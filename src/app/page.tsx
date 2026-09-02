@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Group } from "@mantine/core";
 import ViewSwitcher from "../components/ViewSwitcher";
 import FamilyTree from "../components/family-tree/FamilyTree";
@@ -7,16 +7,42 @@ import FamilyMembers from "../components/family-members";
 import { IconPlus } from "@tabler/icons-react";
 import PersonModal from "../components/person-modal";
 import { useDisclosure } from "@mantine/hooks";
+import { Person } from "../interfaces/Person";
+import { deletePerson, getAllPersons } from "../api/person";
 
 export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
   const [opened, { open, close }] = useDisclosure(false);
   const [currentPersonId, setCurrentPersonId] = useState<string | undefined>();
+  const [data, setData] = useState<Person[]>([]);
+
+  const fetchData = async () => {
+    const res = await getAllPersons();
+    if (res) {
+      setData(res);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Bạn có chắc muốn xoá thành viên này không?")) return;
+
+    try {
+      await deletePerson(id);
+      await fetchData();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleUpsertPerson = (id?: string) => {
     setCurrentPersonId(id);
     open();
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchData();
+  }, []);
 
   return (
     <Box
@@ -53,12 +79,19 @@ export default function Home() {
         }}
       >
         {/* {view === "tree" ? <FamilyTree /> : <FamilyCard />} */}
-        <FamilyMembers handleUpsertPerson={handleUpsertPerson} />
+        <FamilyMembers
+          data={data}
+          handleDelete={handleDelete}
+          handleUpsertPerson={handleUpsertPerson}
+        />
       </Box>
       {opened && (
         <PersonModal
           opened={opened}
-          onClose={close}
+          onClose={() => {
+            close();
+            fetchData();
+          }}
           personId={currentPersonId}
         />
       )}
