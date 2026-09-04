@@ -3,23 +3,28 @@
 import { useEffect, useState } from "react";
 import { Box, Button, Group, SimpleGrid } from "@mantine/core";
 import ViewSwitcher from "../components/ViewSwitcher";
-import FamilyTree from "../components/family-tree/FamilyTree";
+import FamilyTree from "../components/family-tree";
 import { IconPlus } from "@tabler/icons-react";
 import PersonModal from "../components/PersonModal";
 import { useDisclosure } from "@mantine/hooks";
 import { Person } from "../interfaces/Person";
 import { deletePerson, getAllPersons } from "../services/person";
 import PersonCard from "../components/PersonCard";
+import { Marriage } from "../interfaces/Marriage";
+import { getAllMarriages } from "../services/marriage";
 
 export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
   const [opened, { open, close }] = useDisclosure(false);
   const [currentPersonId, setCurrentPersonId] = useState<string | undefined>();
   const [data, setData] = useState<Person[]>([]);
+  const [marriages, setMarriages] = useState<Marriage[]>([]);
 
   const fetchData = async () => {
     const res = await getAllPersons();
     setData(res);
+    const resMarriages = await getAllMarriages();
+    setMarriages(resMarriages);
   };
 
   const handleDelete = async (id: string) => {
@@ -77,18 +82,21 @@ export default function Home() {
           minHeight: 0,
         }}
       >
-        {/* {view === "tree" ? <FamilyTree /> : <FamilyCard />} */}
-        <SimpleGrid cols={{ sm: 3, lg: 6, base: 2 }} spacing="md">
-          {data &&
-            data.map((person) => (
-              <PersonCard
-                handleUpsertPerson={handleUpsertPerson}
-                data={person}
-                key={person.id}
-                handleDelete={handleDelete}
-              />
-            ))}
-        </SimpleGrid>
+        {view === "tree" ? (
+          <FamilyTree marriages={marriages} persons={data} />
+        ) : (
+          <SimpleGrid cols={{ sm: 3, lg: 6, base: 2 }} spacing="md">
+            {data &&
+              data.map((person) => (
+                <PersonCard
+                  handleUpsertPerson={handleUpsertPerson}
+                  data={person}
+                  key={person.id}
+                  handleDelete={handleDelete}
+                />
+              ))}
+          </SimpleGrid>
+        )}
       </Box>
       {opened && (
         <PersonModal

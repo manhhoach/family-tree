@@ -33,3 +33,8 @@ export async function deleteMarriage(id: string) {
   const query = supabase.from("marriages").delete().eq("id", id);
   await execute(query);
 }
+
+export async function getAllMarriages(): Promise<Marriage[]> {
+  const query = supabase.from("marriages").select("*");
+  return execute(query);
+}
