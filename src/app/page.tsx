@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useEffect, useState } from "react";
 import { Box, Button, Group, SimpleGrid } from "@mantine/core";
@@ -7,7 +8,7 @@ import { IconPlus } from "@tabler/icons-react";
 import PersonModal from "../components/PersonModal";
 import { useDisclosure } from "@mantine/hooks";
 import { Person } from "../interfaces/Person";
-import { deletePerson, getAllPersons } from "../api/person";
+import { deletePerson, getAllPersons } from "../services/person";
 import PersonCard from "../components/PersonCard";
 
 export default function Home() {

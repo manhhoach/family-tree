@@ -4,6 +4,8 @@ export interface Person {
   id: string;
   full_name: string;
   gender: Gender;
+  father_id?: string;
+  mother_id?: string;
   birth_date?: string;
   death_date?: string;
   biography?: string;

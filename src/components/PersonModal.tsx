@@ -13,19 +13,21 @@ import {
   Title,
   Stack,
   Group,
+  MultiSelect,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { Gender } from "@/src/consts/Gender";
 import { useForm } from "@mantine/form";
 import { useEffect, useState } from "react";
 import { Person, PersonForm } from "@/src/interfaces/Person";
-import { uploadAvatar } from "@/src/api/storage";
+import { uploadAvatar } from "@/src/services/storage";
 import {
   createPerson,
   getPersonById,
   getPersonSelection,
   updatePerson,
-} from "@/src/api/person";
+} from "@/src/services/person";
+import { getMarriage } from "../services/marriage";
 
 interface PersonModalProps {
   opened: boolean;
@@ -55,6 +57,9 @@ export default function PersonModal({
         death_date: values.death_date ? values.death_date : undefined,
         full_name: values.full_name,
         gender: values.gender,
+        father_id: values.father_id,
+        mother_id: values.mother_id,
+        spouse_ids: values.spouse_ids,
         id: values.id,
       };
       if (values.id) {
@@ -73,6 +78,11 @@ export default function PersonModal({
     }
   };
 
+  const fetchPersonOptions = async () => {
+    const res = await getPersonSelection(personId);
+    setPersonOptions(res as Person[]);
+  };
+
   // useEffect for load form
   useEffect(() => {
     if (!opened) return;
@@ -84,10 +94,13 @@ export default function PersonModal({
 
     const loadPerson = async () => {
       const person = await getPersonById(personId);
-
+      const relationShip = await getMarriage(personId);
       if (person) {
         const originalData: PersonForm = {
           ...person,
+          spouse_ids: relationShip.map((e) =>
+            e.person1_id !== personId ? e.person1_id : e.person2_id,
+          ),
         };
         form.setValues(originalData);
       }
@@ -98,10 +111,7 @@ export default function PersonModal({
 
   // useEffect for init data
   useEffect(() => {
-    const fetchPersonOptions = async () => {
-      const res = await getPersonSelection(personId);
-      setPersonOptions(res as Person[]);
-    };
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchPersonOptions();
   }, []);
 
@@ -186,6 +196,7 @@ export default function PersonModal({
                   .map((e) => ({ value: e.id, label: e.full_name }))}
                 searchable
                 clearable
+                {...form.getInputProps("father_id")}
               />
 
               <Select
@@ -195,17 +206,18 @@ export default function PersonModal({
                   .map((e) => ({ value: e.id, label: e.full_name }))}
                 searchable
                 clearable
+                {...form.getInputProps("mother_id")}
               />
             </Group>
-            <Select
+            <MultiSelect
               label="Vợ / Chồng"
               data={personOptions.map((e) => ({
                 value: e.id,
                 label: e.full_name,
               }))}
               searchable
+              {...form.getInputProps("spouse_ids")}
               clearable
-              multiple
             />
           </Paper>
         </Stack>

@@ -1,5 +1,5 @@
 import { supabase } from "@/src/lib/supabase/client";
-import { MarriageForm } from "../interfaces/Marriage";
+import { Marriage, MarriageForm } from "../interfaces/Marriage";
 import { execute } from "../lib/supabase/query";
 
 export async function createMarriage(data: MarriageForm) {
@@ -10,7 +10,7 @@ export async function createMarriage(data: MarriageForm) {
   await execute(query);
 }
 
-export async function getMarriage(personId: string) {
+export async function getMarriage(personId: string): Promise<Marriage[]> {
   const query = supabase
     .from("marriages")
     .select("*")

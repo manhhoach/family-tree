@@ -10,6 +10,8 @@ CREATE TABLE persons (
     
     biography TEXT,
     avatar_url TEXT,
+    father_id UUID REFERENCES persons(id) ON DELETE SET NULL,
+    mother_id UUID REFERENCES persons(id) ON DELETE SET NULL,
 
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -33,24 +35,6 @@ CREATE TABLE marriages (
         UNIQUE (person1_id, person2_id)
 );
 
-CREATE TABLE parent_child (
-    parent_id UUID NOT NULL
-        REFERENCES persons(id) ON DELETE CASCADE,
-
-    child_id UUID NOT NULL
-        REFERENCES persons(id) ON DELETE CASCADE,
-
-    PRIMARY KEY (parent_id, child_id),
-
-    CONSTRAINT parent_different_child
-        CHECK (parent_id <> child_id)
-);
-
-CREATE INDEX idx_parent_child_parent
-ON parent_child(parent_id);
-
-CREATE INDEX idx_parent_child_child
-ON parent_child(child_id);
 
 CREATE INDEX idx_marriages_person1
 ON marriages(person1_id);
@@ -60,7 +44,6 @@ ON marriages(person2_id);
 
 ALTER TABLE persons ENABLE ROW LEVEL SECURITY;
 ALTER TABLE marriages ENABLE ROW LEVEL SECURITY;
-ALTER TABLE parent_child ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Anyone can view persons"
 ON persons
@@ -111,19 +94,6 @@ WITH CHECK (true);
 
 CREATE POLICY "Authenticated can delete marriages"
 ON marriages
-FOR DELETE
-TO authenticated
-USING (true);
-
-
-CREATE POLICY "Authenticated can insert parent_child"
-ON parent_child
-FOR INSERT
-TO authenticated
-WITH CHECK (true);
-
-CREATE POLICY "Authenticated can delete parent_child"
-ON parent_child
 FOR DELETE
 TO authenticated
 USING (true);
