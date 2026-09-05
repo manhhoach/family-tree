@@ -83,7 +83,7 @@ export default function Home() {
         }}
       >
         {view === "tree" ? (
-          <FamilyTree marriages={marriages} persons={data} />
+          <FamilyTree persons={data} marriages={marriages} />
         ) : (
           <SimpleGrid cols={{ sm: 3, lg: 6, base: 2 }} spacing="md">
             {data &&
