@@ -2,7 +2,11 @@ import { Person } from "./Person";
 
 export interface FamilyNode {
   id: string;
-  person: Person;
-  spouseIds: string[];
-  childIds: string[];
+  main: boolean;
+  data: Person;
+  rels: {
+    children: string[];
+    parents: string[];
+    spouses: string[];
+  };
 }

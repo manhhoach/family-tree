@@ -1,93 +1,50 @@
-"use client";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef } from "react";
-import * as f3 from "family-chart";
-
-import { Person } from "@/src/interfaces/Person";
-import { GenderV2 } from "@/src/consts/Gender";
-import { Marriage } from "@/src/interfaces/Marriage";
-
+import * as f3 from "family-chart"; // npm install family-chart@0.9.0 or yarn add family-chart@0.9.0
+import "family-chart/styles/family-chart.css";
+import { FamilyNode } from "@/src/interfaces/FamilyTree";
+import PersonNode from "./person-node";
+import { createRoot } from "react-dom/client";
 
 interface FamilyTreeProps {
-  persons: Person[];
-  marriages: Marriage[];
+  data: FamilyNode[];
 }
 
-export default function FamilyTree({ persons, marriages }: FamilyTreeProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-
+export default function FamilyTree({ data }: FamilyTreeProps) {
+  const ref = useRef(null);
   useEffect(() => {
-    if (!containerRef.current || persons.length === 0) return;
+    initTree(data as any);
 
-    containerRef.current.innerHTML = "";
+    function initTree(data: f3.Data) {
+      const f3Chart = f3
+        .createChart("#FamilyChart", data)
+        .setTransitionTime(1000)
+        .setCardXSpacing(250)
+        .setCardYSpacing(150);
 
-    const data = persons.map((person) => {
-      const parents = [person.father_id, person.mother_id].filter(
-        Boolean,
-      ) as string[];
+      f3Chart.setCardHtml().setCardDisplay((node: any) => {
+        const container = document.createElement("div");
 
-      const children = persons
-        .filter(
-          (child) =>
-            child.father_id === person.id || child.mother_id === person.id,
-        )
-        .map((child) => child.id);
+        createRoot(container).render(<PersonNode person={node.data} />);
 
-      const spouses = marriages
-        .filter(
-          (marriage) =>
-            marriage.person1_id === person.id ||
-            marriage.person2_id === person.id,
-        )
-        .map((marriage) =>
-          marriage.person1_id === person.id
-            ? marriage.person2_id
-            : marriage.person1_id,
-        );
+        return container;
+      });
 
-      return {
-        id: person.id,
-
-        data: {
-          "first name": person.full_name,
-          gender: person.gender === "MALE" ? "M" : ("F" as GenderV2),
-          birthday: person.birth_date ?? "",
-          avatar: person.avatar_url ?? "",
-        },
-
-        rels: {
-          parents,
-          children,
-          spouses,
-        },
-      };
-    });
-
-    const chart = f3.createChart(containerRef.current, data);
-
-    chart.setTransitionTime(500).setCardXSpacing(250).setCardYSpacing(150);
-
-    const card = chart.setCardHtml();
-
-    card.setCardDisplay([["first name"], ["birthday"]]);
-
-    chart.updateTree({
-      tree_position: "main_to_middle",
-    });
-
-    return () => {
-      containerRef.current?.replaceChildren();
-    };
-  }, [persons, marriages]);
+      f3Chart.updateTree({ initial: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div
-      ref={containerRef}
+      className="f3"
+      id="FamilyChart"
+      ref={ref}
       style={{
         width: "100%",
         height: "700px",
-        overflow: "hidden",
+        margin: "auto",
       }}
-    />
+    ></div>
   );
 }

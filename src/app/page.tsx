@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Button, Group, SimpleGrid } from "@mantine/core";
 import ViewSwitcher from "../components/ViewSwitcher";
 import FamilyTree from "../components/family-tree";
@@ -12,17 +11,18 @@ import { deletePerson, getAllPersons } from "../services/person";
 import PersonCard from "../components/PersonCard";
 import { Marriage } from "../interfaces/Marriage";
 import { getAllMarriages } from "../services/marriage";
+import { formatTreeData } from "../lib/family-tree";
 
 export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
   const [opened, { open, close }] = useDisclosure(false);
   const [currentPersonId, setCurrentPersonId] = useState<string | undefined>();
-  const [data, setData] = useState<Person[]>([]);
+  const [persons, setPersons] = useState<Person[]>([]);
   const [marriages, setMarriages] = useState<Marriage[]>([]);
 
   const fetchData = async () => {
     const res = await getAllPersons();
-    setData(res);
+    setPersons(res);
     const resMarriages = await getAllMarriages();
     setMarriages(resMarriages);
   };
@@ -42,6 +42,11 @@ export default function Home() {
     setCurrentPersonId(id);
     open();
   };
+
+  const treeData = useMemo(
+    () => formatTreeData(persons, marriages),
+    [persons, marriages],
+  );
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -83,11 +88,11 @@ export default function Home() {
         }}
       >
         {view === "tree" ? (
-          <FamilyTree persons={data} marriages={marriages} />
+          <FamilyTree data={treeData} />
         ) : (
           <SimpleGrid cols={{ sm: 3, lg: 6, base: 2 }} spacing="md">
-            {data &&
-              data.map((person) => (
+            {persons &&
+              persons.map((person) => (
                 <PersonCard
                   handleUpsertPerson={handleUpsertPerson}
                   data={person}
