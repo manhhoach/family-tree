@@ -4,7 +4,6 @@ import * as f3 from "family-chart"; // npm install family-chart@0.9.0 or yarn ad
 import "family-chart/styles/family-chart.css";
 import { FamilyNode } from "@/src/interfaces/FamilyTree";
 import PersonNode from "./person-node";
-import { createRoot } from "react-dom/client";
 
 interface FamilyTreeProps {
   data: FamilyNode[];
@@ -22,12 +21,8 @@ export default function FamilyTree({ data }: FamilyTreeProps) {
         .setCardXSpacing(250)
         .setCardYSpacing(150);
 
-      f3Chart.setCardHtml().setCardDisplay((node: any) => {
-        const container = document.createElement("div");
-
-        createRoot(container).render(<PersonNode person={node.data} />);
-
-        return container;
+      f3Chart.setCardHtml().setCardInnerHtmlCreator((d) => {
+        return PersonNode(d.data.data as any);
       });
 
       f3Chart.updateTree({ initial: true });
