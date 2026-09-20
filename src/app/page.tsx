@@ -12,13 +12,19 @@ import PersonCard from "../components/PersonCard";
 import { Marriage } from "../interfaces/Marriage";
 import { getAllMarriages } from "../services/marriage";
 import { formatTreeData } from "../lib/family-tree";
+import PersonDetailModal from "../components/PersonDetailModal";
 
 export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
-  const [opened, { open, close }] = useDisclosure(false);
+  const [openUpsert, { open: openUpsertModal, close: closeUpsertModal }] =
+    useDisclosure(false);
+  const [openDetail, { open: openDetailModal, close: closeDetailModal }] =
+    useDisclosure(false);
   const [currentPersonId, setCurrentPersonId] = useState<string | undefined>();
   const [persons, setPersons] = useState<Person[]>([]);
   const [marriages, setMarriages] = useState<Marriage[]>([]);
+
+  const currentPerson = persons.find((person) => person.id === currentPersonId);
 
   const fetchData = async () => {
     const res = await getAllPersons();
@@ -40,7 +46,12 @@ export default function Home() {
 
   const handleUpsertPerson = (id?: string) => {
     setCurrentPersonId(id);
-    open();
+    openUpsertModal();
+  };
+
+  const handleDetailPerson = (id?: string) => {
+    setCurrentPersonId(id);
+    openDetailModal();
   };
 
   const treeData = useMemo(
@@ -98,19 +109,30 @@ export default function Home() {
                   data={person}
                   key={person.id}
                   handleDelete={handleDelete}
+                  handleDetailPerson={handleDetailPerson}
                 />
               ))}
           </SimpleGrid>
         )}
       </Box>
-      {opened && (
+      {openUpsert && (
         <PersonModal
-          opened={opened}
+          opened={openUpsert}
           onClose={async () => {
-            close();
+            closeUpsertModal();
             fetchData();
           }}
           personId={currentPersonId}
+        />
+      )}
+      {openDetail && currentPerson && (
+        <PersonDetailModal
+          opened={openDetail}
+          onClose={async () => {
+            closeDetailModal();
+          }}
+          person={currentPerson}
+          persons={persons}
         />
       )}
     </Box>

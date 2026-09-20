@@ -27,8 +27,7 @@ export default function FamilyTree({ data }: FamilyTreeProps) {
 
       f3Chart.updateTree({ initial: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [data]);
 
   return (
     <div
