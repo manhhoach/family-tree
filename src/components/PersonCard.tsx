@@ -83,7 +83,7 @@ export default function PersonCard({
             {data.birth_date
               ? dayjs(data.birth_date).format("DD/MM/YYYY")
               : "??"}
-            {" ⇒ "}
+            {" - "}
             {data.death_date
               ? dayjs(data.death_date).format("DD/MM/YYYY")
               : "??"}

@@ -9,7 +9,7 @@ export default function Header() {
     <Box
       component="header"
       style={{
-        background: "#173F35",
+        background: "#387868",
       }}
     >
       <Group

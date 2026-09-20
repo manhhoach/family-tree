@@ -1,8 +1,6 @@
 import { Person } from "@/src/interfaces/Person";
 
 export default function PersonNode(person: Person): string {
-  console.log("PersonNode:", person);
-
   const avatar = person.avatar_url || "";
   const fullName = person.full_name || "??";
   const birthDate = person.birth_date || "??";
@@ -12,17 +10,18 @@ export default function PersonNode(person: Person): string {
     <div
       class="card-inner"
       style="
-        width: 220px;
-        height: 80px;
-        padding: 10px;
+        width: 240px;
+        height: 90px;
+        padding: 12px;
         box-sizing: border-box;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 14px;
         background: #ffffff;
         color: #000000;
-        border-radius: 8px;
-        border: 1px solid #ddd;
+        border-radius: 14px;
+        border: 2px solid #2f8f82;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
       "
     >
       <div
@@ -32,7 +31,11 @@ export default function PersonNode(person: Person): string {
           min-width: 60px;
           border-radius: 50%;
           overflow: hidden;
-          background: #ddd;
+          background: #ffffff;
+          border: 2px solid #2f8f82;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         "
       >
         ${
@@ -57,8 +60,9 @@ export default function PersonNode(person: Person): string {
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  color: #666;
+                  color: #2f8f82;
                   font-size: 18px;
+                  font-weight: 600;
                 "
               >
                 ??
@@ -71,15 +75,14 @@ export default function PersonNode(person: Person): string {
         style="
           flex: 1;
           min-width: 0;
-          color: #000000;
           text-align: left;
         "
       >
         <div
           style="
             color: #000000;
-            font-size: 15px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             line-height: 20px;
             white-space: nowrap;
             overflow: hidden;
@@ -91,9 +94,11 @@ export default function PersonNode(person: Person): string {
 
         <div
           style="
-            color: #666666;
+            color: #888888;
             font-size: 13px;
+            font-weight:500;
             line-height: 18px;
+            margin-top: 2px;
           "
         >
           ${birthDate} - ${deathDate}

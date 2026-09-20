@@ -37,7 +37,7 @@ export default function FamilyTree({ data }: FamilyTreeProps) {
       ref={ref}
       style={{
         width: "100%",
-        height: "700px",
+        height: "600px",
         margin: "auto",
       }}
     ></div>
