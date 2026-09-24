@@ -26,18 +26,17 @@ export default function LoginPage() {
     setError("");
     setLoading(true);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    console.log(data)
+
     if (error) {
       setError(error.message);
       setLoading(false);
       return;
     }
-
-   // router.push("/");
+    router.push("/");
   };
 
   return (

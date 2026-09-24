@@ -13,6 +13,7 @@ import { Marriage } from "../interfaces/Marriage";
 import { getAllMarriages } from "../services/marriage";
 import { formatTreeData } from "../lib/family-tree";
 import PersonDetailModal from "../components/PersonDetailModal";
+import { useAuth } from "../providers/AuthProvider";
 
 export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
@@ -23,8 +24,9 @@ export default function Home() {
   const [currentPersonId, setCurrentPersonId] = useState<string | undefined>();
   const [persons, setPersons] = useState<Person[]>([]);
   const [marriages, setMarriages] = useState<Marriage[]>([]);
-
   const currentPerson = persons.find((person) => person.id === currentPersonId);
+
+  const { isAuthenticated } = useAuth();
 
   const fetchData = async () => {
     const res = await getAllPersons();
@@ -78,17 +80,19 @@ export default function Home() {
     >
       <Group mb="md" display={"flex"} justify="center" gap="lg">
         <ViewSwitcher value={view} onChange={setView} />
-        <Button
-          w={40}
-          h={40}
-          p={0}
-          radius="50%"
-          onClick={() => {
-            handleUpsertPerson();
-          }}
-        >
-          <IconPlus />
-        </Button>
+        {isAuthenticated && (
+          <Button
+            w={40}
+            h={40}
+            p={0}
+            radius="50%"
+            onClick={() => {
+              handleUpsertPerson();
+            }}
+          >
+            <IconPlus />
+          </Button>
+        )}
       </Group>
 
       <Box

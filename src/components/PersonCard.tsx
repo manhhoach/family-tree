@@ -10,6 +10,7 @@ import {
 } from "@mantine/core";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import { useAuth } from "../providers/AuthProvider";
 
 interface PersonCardProps {
   data: Person;
@@ -24,29 +25,33 @@ export default function PersonCard({
   handleDelete,
   handleDetailPerson,
 }: PersonCardProps) {
+  const { isAuthenticated } = useAuth();
   return (
     <Card withBorder radius="md" shadow="md" w={200} pos="relative">
-      <Group pos="absolute" top={0} right={4} gap={0}>
-        <Tooltip label="Sửa">
-          <ActionIcon
-            variant="subtle"
-            color="blue"
-            onClick={() => handleUpsertPerson(data.id)}
-          >
-            <IconEdit size={16} />
-          </ActionIcon>
-        </Tooltip>
+      {isAuthenticated && (
+        <Group pos="absolute" top={0} right={4} gap={0}>
+          <Tooltip label="Sửa">
+            <ActionIcon
+              variant="subtle"
+              color="blue"
+              onClick={() => handleUpsertPerson(data.id)}
+            >
+              <IconEdit size={16} />
+            </ActionIcon>
+          </Tooltip>
 
-        <Tooltip label="Xóa">
-          <ActionIcon
-            variant="subtle"
-            color="red"
-            onClick={() => handleDelete(data.id)}
-          >
-            <IconTrash size={16} />
-          </ActionIcon>
-        </Tooltip>
-      </Group>
+          <Tooltip label="Xóa">
+            <ActionIcon
+              variant="subtle"
+              color="red"
+              onClick={() => handleDelete(data.id)}
+            >
+              <IconTrash size={16} />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
+      )}
+
       <Stack align="center" gap="xs">
         <Avatar
           className="cursor-pointer"
