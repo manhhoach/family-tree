@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Group, SimpleGrid } from "@mantine/core";
+import { Box, Button, Group } from "@mantine/core";
 import ViewSwitcher from "../components/ViewSwitcher";
 import FamilyTree from "../components/family-tree";
 import { IconPlus } from "@tabler/icons-react";
@@ -8,12 +8,12 @@ import PersonModal from "../components/PersonModal";
 import { useDisclosure } from "@mantine/hooks";
 import { Person } from "../interfaces/Person";
 import { deletePerson, getAllPersons } from "../services/person";
-import PersonCard from "../components/PersonCard";
 import { Marriage } from "../interfaces/Marriage";
 import { getAllMarriages } from "../services/marriage";
 import { formatTreeData } from "../lib/family-tree";
 import PersonDetailModal from "../components/PersonDetailModal";
 import { useAuth } from "../providers/AuthProvider";
+import PersonList from "../components/PersonList";
 
 export default function Home() {
   const [view, setView] = useState<"card" | "tree">("tree");
@@ -105,18 +105,12 @@ export default function Home() {
         {view === "tree" ? (
           <FamilyTree data={treeData} />
         ) : (
-          <SimpleGrid cols={{ sm: 3, lg: 6, base: 2 }} spacing="md">
-            {persons &&
-              persons.map((person) => (
-                <PersonCard
-                  handleUpsertPerson={handleUpsertPerson}
-                  data={person}
-                  key={person.id}
-                  handleDelete={handleDelete}
-                  handleDetailPerson={handleDetailPerson}
-                />
-              ))}
-          </SimpleGrid>
+          <PersonList
+            handleDelete={handleDelete}
+            handleDetailPerson={handleDetailPerson}
+            handleUpsertPerson={handleUpsertPerson}
+            persons={persons}
+          />
         )}
       </Box>
       {openUpsert && (
