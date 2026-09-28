@@ -36,16 +36,9 @@ export default function Header() {
             <img alt="icon" src={"/family-tree.png"} />
           </Box>
 
-          <Text
-            fw={700}
-            size="28px"
-            c="white"
-            style={{
-              letterSpacing: "-0.8px",
-            }}
-          >
+          <p className="text-2xl md:text-3xl font-bold text-white">
             Gia phả họ Bùi Thế
-          </Text>
+          </p>
         </Group>
         <div className="hidden md:block">
           {isAuthenticated ? (

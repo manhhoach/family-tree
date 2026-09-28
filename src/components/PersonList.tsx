@@ -15,7 +15,7 @@ export default function PersonList({
   handleDetailPerson,
 }: PersonListProps) {
   return (
-    <SimpleGrid cols={{ sm: 3, lg: 8, base: 2 }} spacing="md" mb={10}>
+    <SimpleGrid px={20} cols={{ sm: 3, lg: 8, base: 2 }} spacing="md" mb={10}>
       {persons &&
         persons.map((person) => (
           <PersonCard

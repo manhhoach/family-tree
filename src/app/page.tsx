@@ -68,7 +68,7 @@ export default function Home() {
 
   return (
     <Box
-      w="90%"
+      w="100%"
       mx="auto"
       pt="md"
       style={{
