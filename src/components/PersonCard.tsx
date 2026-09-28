@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Person } from "@/src/interfaces/Person";
 import {
   ActionIcon,
@@ -26,14 +27,28 @@ export default function PersonCard({
   handleDetailPerson,
 }: PersonCardProps) {
   const { isAuthenticated } = useAuth();
+
   return (
-    <Card withBorder radius="md" shadow="md" w={200} pos="relative">
+    <Card
+      withBorder
+      radius="md"
+      shadow="md"
+      w={{ base: "100%", xs: 180, sm: 200 }}
+      pos="relative"
+      p={{ base: "xs", sm: "md" }}
+    >
       {isAuthenticated && (
-        <Group pos="absolute" top={0} right={4} gap={0}>
+        <Group
+          pos="absolute"
+          top={{ base: 2, sm: 4 }}
+          right={{ base: 2, sm: 4 }}
+          gap={0}
+        >
           <Tooltip label="Sửa">
             <ActionIcon
               variant="subtle"
               color="blue"
+              size="sm"
               onClick={() => handleUpsertPerson(data.id)}
             >
               <IconEdit size={16} />
@@ -44,6 +59,7 @@ export default function PersonCard({
             <ActionIcon
               variant="subtle"
               color="red"
+              size="sm"
               onClick={() => handleDelete(data.id)}
             >
               <IconTrash size={16} />
@@ -56,32 +72,29 @@ export default function PersonCard({
         <Avatar
           className="cursor-pointer"
           src={data.avatar_url}
-          size={160}
-          radius={90}
-          onClick={() => {
-            handleDetailPerson(data.id);
-          }}
+          size="clamp(120px, 12vw, 160px)"
+          radius="50%"
+          onClick={() => handleDetailPerson(data.id)}
         >
           {data.full_name.charAt(0)}
         </Avatar>
 
-        <Group ta="center">
-          <Text fw={600} size="lg">
-            {data.full_name}
-          </Text>
-        </Group>
+        <Text
+          fw={600}
+          size={{ base: "sm", sm: "lg" } as any}
+          ta="center"
+          lineClamp={2}
+          className="cursor-pointer"
+          onClick={() => handleDetailPerson(data.id)}
+        >
+          {data.full_name}
+        </Text>
 
-        <Group gap="sm">
-          <Text size="sm">
-            {data.birth_date
-              ? dayjs(data.birth_date).format("DD/MM/YYYY")
-              : "??"}
-            {" - "}
-            {data.death_date
-              ? dayjs(data.death_date).format("DD/MM/YYYY")
-              : "??"}
-          </Text>
-        </Group>
+        <p className="whitespace-nowrap text-xs md:text-sm">
+          {data.birth_date ? dayjs(data.birth_date).format("DD/MM/YYYY") : "??"}
+          {" - "}
+          {data.death_date ? dayjs(data.death_date).format("DD/MM/YYYY") : "??"}
+        </p>
       </Stack>
     </Card>
   );
