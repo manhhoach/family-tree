@@ -11,17 +11,17 @@ export default function PersonNode(person: Person): string {
       class="card-inner"
       style="
         width: 240px;
-        height: 90px;
+        height: 80px;
         padding: 12px;
         box-sizing: border-box;
         display: flex;
         align-items: center;
-        gap: 14px;
+        gap: 10px;
         background: #ffffff;
         color: #000000;
         border-radius: 14px;
-        border: 2px solid #2f8f82;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        border: 1px solid #2f8f82;
+        box-shadow: 0 1px 1px rgba(0,0,0,0.08);
       "
     >
       <div
@@ -32,7 +32,7 @@ export default function PersonNode(person: Person): string {
           border-radius: 50%;
           overflow: hidden;
           background: #ffffff;
-          border: 2px solid #2f8f82;
+          border: 1px solid #2f8f82;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -65,7 +65,7 @@ export default function PersonNode(person: Person): string {
                   font-weight: 600;
                 "
               >
-                ??
+                ?
               </div>
             `
         }

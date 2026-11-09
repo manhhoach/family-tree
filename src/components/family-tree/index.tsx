@@ -15,22 +15,7 @@ export default function FamilyTree({ data }: FamilyTreeProps) {
   useEffect(() => {
     if (!ref.current || !data.length) return;
 
-    // Đưa node gốc lên đầu
-    const sortedData = [...data].sort((a, b) => {
-      if (a.main !== b.main) {
-        return Number(b.main) - Number(a.main);
-      }
-
-      // Ưu tiên người chồng trong cặp gốc
-      if (a.main && b.main) {
-        return a.data.gender === "MALE" ? -1 : 1;
-      }
-
-      return 0;
-    });
-
-    // Chuẩn hóa dữ liệu cho family-chart
-    const chartData = sortedData.map((node) => ({
+    const chartData = data.map((node) => ({
       id: node.id,
       data: {
         ...node.data,
@@ -49,7 +34,7 @@ export default function FamilyTree({ data }: FamilyTreeProps) {
     const chart = f3
       .createChart(ref.current, chartData as any)
       .setTransitionTime(1000)
-      .setCardXSpacing(250)
+      .setCardXSpacing(300)
       .setSingleParentEmptyCard(false)
       .setCardYSpacing(150);
 
@@ -72,7 +57,7 @@ export default function FamilyTree({ data }: FamilyTreeProps) {
       ref={ref}
       style={{
         width: "100%",
-        height: "600px",
+        height: "660px",
         margin: "auto",
       }}
     ></div>

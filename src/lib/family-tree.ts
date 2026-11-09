@@ -39,6 +39,17 @@ export const formatTreeData = (
     });
   });
 
+  nodes.forEach((node) => {
+    node.rels.children.sort((a, b) => {
+      const childA = nodeMap.get(a);
+      const childB = nodeMap.get(b);
+
+      if (!childA || !childB) return 0;
+
+      return childA.data.order - childB.data.order;
+    });
+  });
+
   // Vợ/chồng
   marriages.forEach((marriage) => {
     const person1 = nodeMap.get(marriage.person1_id);
@@ -69,5 +80,18 @@ export const formatTreeData = (
       (node.data.gender === "FEMALE" && hasSpouseWithNoParents);
   });
 
-  return nodes;
+  // Đưa node gốc lên đầu
+  const sortedData = [...nodes].sort((a, b) => {
+    if (a.main !== b.main) {
+      return Number(b.main) - Number(a.main);
+    }
+
+    // Ưu tiên người chồng trong cặp gốc
+    if (a.main && b.main) {
+      return a.data.gender === "MALE" ? -1 : 1;
+    }
+
+    return 0;
+  });
+  return sortedData;
 };
