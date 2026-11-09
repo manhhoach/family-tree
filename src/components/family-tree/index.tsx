@@ -50,6 +50,7 @@ export default function FamilyTree({ data }: FamilyTreeProps) {
       .createChart(ref.current, chartData as any)
       .setTransitionTime(1000)
       .setCardXSpacing(250)
+      .setSingleParentEmptyCard(false)
       .setCardYSpacing(150);
 
     chart.setCardHtml().setCardInnerHtmlCreator((d) => {

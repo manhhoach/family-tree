@@ -1,9 +1,6 @@
 import { Person } from "@/src/interfaces/Person";
 
 export default function PersonNode(person: Person): string {
-  if (!person.id) {
-    return "";
-  }
   const avatar = person.avatar_url || "";
   const fullName = person.full_name || "??";
   const birthDate = person.birth_date || "??";
