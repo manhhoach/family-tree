@@ -10,6 +10,7 @@ export interface Person {
   death_date?: string;
   biography?: string;
   avatar_url?: string;
+  order: number;
   created_at: string;
   updated_at: string;
 }
@@ -25,6 +26,7 @@ export interface PersonForm {
   father_id?: string;
   mother_id?: string;
   spouse_ids?: string[];
+  order: number;
 }
 
 export interface PersonSearchCondition {

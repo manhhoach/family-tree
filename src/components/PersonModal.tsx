@@ -14,6 +14,7 @@ import {
   Stack,
   Group,
   MultiSelect,
+  NumberInput,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { Gender } from "@/src/consts/Gender";
@@ -61,6 +62,7 @@ export default function PersonModal({
         mother_id: values.mother_id,
         spouse_ids: values.spouse_ids,
         id: values.id,
+        order: values.order,
       };
       if (values.id) {
         await updatePerson(personModel);
@@ -137,6 +139,13 @@ export default function PersonModal({
                 ]}
                 required
                 {...form.getInputProps("gender")}
+              />
+              <NumberInput
+                label="Con thứ"
+                required
+                min={1}
+                max={10}
+                {...form.getInputProps("order")}
               />
             </Group>
             <Group justify="space-between" grow>

@@ -31,6 +31,7 @@ export async function createPerson(person: PersonForm) {
       avatar_url: person.avatar_url,
       father_id: person.father_id,
       mother_id: person.mother_id,
+      order: person.order,
     })
     .select("id")
     .single();
@@ -65,6 +66,7 @@ export async function updatePerson(person: PersonForm) {
       father_id: person.father_id,
       mother_id: person.mother_id,
       updated_at: new Date().toISOString(),
+      order: person.order,
     })
     .eq("id", person.id);
 
