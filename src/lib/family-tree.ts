@@ -59,12 +59,14 @@ export const formatTreeData = (
   nodes.forEach((node) => {
     const noParents = node.rels.parents.length === 0;
 
-    const spousesHaveNoParents = node.rels.spouses.every((spouseId) => {
+    const hasSpouseWithNoParents = node.rels.spouses.some((spouseId) => {
       const spouse = nodeMap.get(spouseId);
-      return spouse ? spouse.rels.parents.length === 0 : false;
+      return spouse?.data.gender === "MALE" && spouse.rels.parents.length === 0;
     });
 
-    node.main = noParents && spousesHaveNoParents;
+    node.main =
+      (node.data.gender === "MALE" && noParents) ||
+      (node.data.gender === "FEMALE" && hasSpouseWithNoParents);
   });
 
   return nodes;
