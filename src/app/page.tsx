@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
-import { Box, Button, Group } from "@mantine/core";
+import { Box } from "@mantine/core";
 import ViewSwitcher from "../components/ViewSwitcher";
 import FamilyTree from "../components/family-tree";
-import { IconPlus } from "@tabler/icons-react";
 import PersonModal from "../components/PersonModal";
 import { useDisclosure } from "@mantine/hooks";
 import { Person } from "../interfaces/Person";
@@ -12,7 +11,6 @@ import { Marriage } from "../interfaces/Marriage";
 import { getAllMarriages } from "../services/marriage";
 import { formatTreeData } from "../lib/family-tree";
 import PersonDetailModal from "../components/PersonDetailModal";
-import { useAuth } from "../providers/AuthProvider";
 import PersonList from "../components/PersonList";
 
 export default function Home() {
@@ -25,8 +23,6 @@ export default function Home() {
   const [persons, setPersons] = useState<Person[]>([]);
   const [marriages, setMarriages] = useState<Marriage[]>([]);
   const currentPerson = persons.find((person) => person.id === currentPersonId);
-
-  const { isAuthenticated } = useAuth();
 
   const fetchData = async () => {
     const res = await getAllPersons();
@@ -78,23 +74,7 @@ export default function Home() {
         minHeight: 0,
       }}
     >
-      <Group mb="md" display={"flex"} justify="center" gap="lg">
-        <ViewSwitcher value={view} onChange={setView} />
-        {isAuthenticated && (
-          <Button
-            w={40}
-            h={40}
-            p={0}
-            radius="50%"
-            onClick={() => {
-              handleUpsertPerson();
-            }}
-          >
-            <IconPlus />
-          </Button>
-        )}
-      </Group>
-
+      <ViewSwitcher value={view} onChange={setView} />
       <Box
         w="100%"
         style={{

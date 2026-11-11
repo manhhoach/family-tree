@@ -1,7 +1,5 @@
 "use client";
-
-import { SegmentedControl } from "@mantine/core";
-
+import { Group, SegmentedControl } from "@mantine/core";
 type ViewMode = "card" | "tree";
 
 interface ViewSwitcherProps {
@@ -11,33 +9,35 @@ interface ViewSwitcherProps {
 
 export default function ViewSwitcher({ value, onChange }: ViewSwitcherProps) {
   return (
-    <SegmentedControl
-      value={value}
-      onChange={(value) => onChange(value as ViewMode)}
-      data={[
-        { label: "Danh sách", value: "card" },
-        { label: "Cây gia phả", value: "tree" },
-      ]}
-      radius="xl"
-      size="md"
-      bg="gray.1"
-      color="green.9"
-      styles={{
-        root: {
-          padding: 4,
-          border: "1px solid var(--mantine-color-gray-2)",
-        },
+    <Group mb="md" display={"flex"} justify="center" gap="lg">
+      <SegmentedControl
+        value={value}
+        onChange={(value) => onChange(value as ViewMode)}
+        data={[
+          { label: "Danh sách", value: "card" },
+          { label: "Cây gia phả", value: "tree" },
+        ]}
+        radius="xl"
+        size="md"
+        bg="gray.1"
+        color="green.9"
+        styles={{
+          root: {
+            padding: 4,
+            border: "1px solid var(--mantine-color-gray-2)",
+          },
 
-        indicator: {
-          borderRadius: "999px",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12)",
-        },
+          indicator: {
+            borderRadius: "999px",
+            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12)",
+          },
 
-        label: {
-          fontWeight: 600,
-          paddingInline: 16,
-        },
-      }}
-    />
+          label: {
+            fontWeight: 600,
+            paddingInline: 16,
+          },
+        }}
+      />
+    </Group>
   );
 }

@@ -2,9 +2,10 @@
 
 import { Person } from "../interfaces/Person";
 import { DataTable } from "mantine-datatable";
-import { TextInput, Group, ActionIcon, Box } from "@mantine/core";
-import { IconSearch, IconEdit, IconTrash } from "@tabler/icons-react";
+import { TextInput, Group, ActionIcon, Box, Button } from "@mantine/core";
+import { IconSearch, IconEdit, IconTrash, IconPlus } from "@tabler/icons-react";
 import { useState } from "react";
+import { useAuth } from "../providers/AuthProvider";
 
 interface PersonListProps {
   persons: Person[];
@@ -20,6 +21,7 @@ export default function PersonList({
   handleDetailPerson,
 }: PersonListProps) {
   const [search, setSearch] = useState("");
+  const { isAuthenticated } = useAuth();
 
   const filteredPersons = persons.filter((person) =>
     person.full_name?.toLowerCase().includes(search.toLowerCase()),
@@ -42,13 +44,28 @@ export default function PersonList({
         overflow: "hidden",
       }}
     >
-      <TextInput
-        placeholder="Tìm kiếm họ và tên..."
-        leftSection={<IconSearch size={16} />}
-        value={search}
-        onChange={(e) => setSearch(e.currentTarget.value)}
-        mb="md"
-      />
+      <Group mb="md" display={"flex"} justify="start" align="center" gap="lg">
+        <TextInput
+          placeholder="Tìm kiếm họ và tên..."
+          leftSection={<IconSearch size={16} />}
+          value={search}
+          onChange={(e) => setSearch(e.currentTarget.value)}
+        />
+        {isAuthenticated && (
+          <Button
+            w={30}
+            h={30}
+            p={0}
+            radius="50%"
+            onClick={() => {
+              handleUpsertPerson();
+            }}
+          >
+            <IconPlus />
+          </Button>
+        )}
+      </Group>
+
       <Box style={{ overflow: "auto", flex: 1, minHeight: 0 }}>
         <DataTable
           withTableBorder
