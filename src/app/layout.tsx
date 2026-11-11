@@ -37,7 +37,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <ColorSchemeScript />
       </head>
-      <body className="min-h-full flex flex-col bg-[#cccccc]!">
+      <body className="min-h-full flex flex-col ">
         <AuthProvider>
           <MantineProvider theme={theme}>
             <Header />
