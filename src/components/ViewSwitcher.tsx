@@ -14,8 +14,8 @@ export default function ViewSwitcher({ value, onChange }: ViewSwitcherProps) {
         value={value}
         onChange={(value) => onChange(value as ViewMode)}
         data={[
-          { label: "Danh sách", value: "card" },
           { label: "Cây gia phả", value: "tree" },
+          { label: "Danh sách", value: "card" },
         ]}
         radius="xl"
         size="md"

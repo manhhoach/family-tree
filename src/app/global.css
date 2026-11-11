@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+.f3 svg path {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+@font-face {
+  font-family: "Be Vietnam Pro";
+  src: url("/BeVietnamPro.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+.font-vietnam{
+  font-family: "Be Vietnam Pro", sans-serif;
+}

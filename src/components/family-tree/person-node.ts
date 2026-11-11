@@ -3,8 +3,6 @@ import { Person } from "@/src/interfaces/Person";
 export default function PersonNode(person: Person): string {
   const avatar = person.avatar_url || "";
   const fullName = person.full_name || "??";
-  const birthDate = person.birth_date || "??";
-  const deathDate = person.death_date || "??";
 
   return `
     <div
@@ -20,8 +18,9 @@ export default function PersonNode(person: Person): string {
         background: #ffffff;
         color: #000000;
         border-radius: 14px;
-        border: 1px solid #2f8f82;
+        border: 1px solid black;
         box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+      
       "
     >
       <div
@@ -32,7 +31,7 @@ export default function PersonNode(person: Person): string {
           border-radius: 50%;
           overflow: hidden;
           background: #ffffff;
-          border: 1px solid #2f8f82;
+          border: 1px solid black;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -60,7 +59,7 @@ export default function PersonNode(person: Person): string {
                   display: flex;
                   align-items: center;
                   justify-content: center;
-                  color: #2f8f82;
+                  color: black;
                   font-size: 18px;
                   font-weight: 600;
                 "
@@ -88,20 +87,9 @@ export default function PersonNode(person: Person): string {
             overflow: hidden;
             text-overflow: ellipsis;
           "
+          class="font-vietnam"
         >
           ${fullName}
-        </div>
-
-        <div
-          style="
-            color: #888888;
-            font-size: 13px;
-            font-weight:500;
-            line-height: 18px;
-            margin-top: 2px;
-          "
-        >
-          ${birthDate} - ${deathDate}
         </div>
       </div>
     </div>

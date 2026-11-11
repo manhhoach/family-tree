@@ -90,6 +90,11 @@ export default function PersonList({
             {
               accessor: "birth_date",
               title: "Ngày sinh",
+              render: (person) => {
+                if (!person.birth_date) return "";
+                const date = new Date(person.birth_date);
+                return date.toLocaleDateString("vi-VN");
+              },
             },
             {
               accessor: "actions",
