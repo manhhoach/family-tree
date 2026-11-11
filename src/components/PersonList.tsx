@@ -100,24 +100,28 @@ export default function PersonList({
               accessor: "actions",
               title: "Thao tác",
               textAlign: "right",
-              render: (person) => (
-                <Group gap="xs" justify="right">
-                  <ActionIcon
-                    variant="subtle"
-                    onClick={() => handleUpsertPerson(person.id)}
-                  >
-                    <IconEdit size={16} />
-                  </ActionIcon>
+              hidden: !isAuthenticated,
+              render: (person) => {
+                if (!isAuthenticated) return "";
+                return (
+                  <Group gap="xs" justify="right">
+                    <ActionIcon
+                      variant="subtle"
+                      onClick={() => handleUpsertPerson(person.id)}
+                    >
+                      <IconEdit size={16} />
+                    </ActionIcon>
 
-                  <ActionIcon
-                    color="red"
-                    variant="subtle"
-                    onClick={() => handleDelete(person.id)}
-                  >
-                    <IconTrash size={16} />
-                  </ActionIcon>
-                </Group>
-              ),
+                    <ActionIcon
+                      color="red"
+                      variant="subtle"
+                      onClick={() => handleDelete(person.id)}
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
+                  </Group>
+                );
+              },
             },
           ]}
         />
